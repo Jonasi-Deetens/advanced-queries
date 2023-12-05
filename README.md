@@ -85,7 +85,7 @@ solution: 177
 ### 9) How many customers do we have living in the state Nevada or New York?
 ```
 SELECT COUNT(*) FROM customers 
-WHERE state="NV" OR state="NY";
+WHERE state in ("NV", "NY");
 ```
 
 solution: 7
@@ -94,7 +94,7 @@ solution: 7
 ### 10) How many customers do we have living in the state Nevada or New York or outside the united states?
 ```
 SELECT COUNT(*) FROM customers 
-WHERE state="NV" OR state="NY" OR country <> "USA";
+WHERE state in ("NV", "NY") OR country <> "USA";
 ```
 
 solution: 93
@@ -170,7 +170,21 @@ solution: Young
 - [X] Shipped
 
 ```
-SELECT DISTINCT status from orders;
+SELECT status
+FROM (
+    SELECT 'Resolved' AS status
+    UNION ALL SELECT 'Cancelled'
+    UNION ALL SELECT 'Broken'
+    UNION ALL SELECT 'On Hold'
+    UNION ALL SELECT 'Disputed'
+    UNION ALL SELECT 'In Process'
+    UNION ALL SELECT 'Processing'
+    UNION ALL SELECT 'Shipped'
+) AS status_list
+WHERE status IN (
+    SELECT DISTINCT status
+    FROM orders
+);
 ```
 
 solution: See list ^
@@ -194,7 +208,21 @@ solution: See list ^
 - [X] South Korea
 
 ```
-SELECT DISTINCT country FROM customers;
+SELECT country_name
+FROM (
+    SELECT 'Austria' AS country_name
+    UNION ALL SELECT 'Canada'
+    UNION ALL SELECT 'China'
+    UNION ALL SELECT 'Germany'
+    UNION ALL SELECT 'Greece'
+    UNION ALL SELECT 'Japan'
+    UNION ALL SELECT 'Philippines'
+    UNION ALL SELECT 'South Korea'
+) AS country_list
+WHERE country_name NOT IN (
+    SELECT DISTINCT country
+    FROM customers
+);
 ```
 
 solution: See list ^
