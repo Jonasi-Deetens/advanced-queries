@@ -76,25 +76,28 @@ solution: lthompson@classicmodelcars.com
 
 ### 8) Which customer (give customer number) payed by check on 2004-01-19?
 ```
-<Your SQL query here>
+SELECT customerNumber FROM payments 
+WHERE paymentDate="2004-01-19";
 ```
 
-solution: `<your solution here>`
+solution: 177
 
 ### 9) How many customers do we have living in the state Nevada or New York?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers 
+WHERE state="NV" OR state="NY";
 ```
 
-solution: `<your solution here>`
+solution: 7
 
 
 ### 10) How many customers do we have living in the state Nevada or New York or outside the united states?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers 
+WHERE state="NV" OR state="NY" OR country <> "USA";
 ```
 
-solution: `<your solution here>`
+solution: 93
 
 ### 11) How many customers do we have with the following conditions (only 1 query needed):  - Living in the state Nevada or New York OR - Living outside the USA or the customers and with a credit limit above 1000 dollar?
 ```
