@@ -451,62 +451,112 @@ solution: 8999330.52
 
 ### 43) What is the total value of all shipped & resolved sales in the year 2005 combined? (based on shipping date)
 ```
-<Your SQL query here>
+SELECT SUM(totalPrice) FROM orders a
+join (
+SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
+GROUP BY orderNumber
+) b ON a.orderNumber = b.orderNumber
+WHERE a.status IN ("Shipped", "Resolved") AND YEAR(a.shippedDate) = "2005";
 ```
 
-solution: `<your solution here>`
+solution: 1427944.97
 
 
 ### 44) What was our most profitable year ever (based on shipping date), considering all shipped & resolved orders?
 ```
-<Your SQL query here>
+SELECT YEAR(a.shippedDate) FROM orders a
+join (
+    SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
+    GROUP BY orderNumber
+) b ON a.orderNumber = b.orderNumber
+WHERE a.status IN ("Shipped", "Resolved") 
+group by YEAR(a.shippedDate)
+ORDER BY totalPrice DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 2004
 
 ### 45) How much revenue did we make on in our most profitable year ever (based on shipping date), considering all shipped & resolved orders?
 ```
-<Your SQL query here>
+SELECT SUM(totalPrice) FROM orders a
+join (
+    SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
+    GROUP BY orderNumber
+) b ON a.orderNumber = b.orderNumber
+WHERE a.status IN ("Shipped", "Resolved") 
+group by YEAR(a.shippedDate)
+ORDER BY totalPrice DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 4321167.85
 
 ### 46) What is the name of our biggest customer in the USA of terms of revenue?
 ```
-<Your SQL query here>
+SELECT a.customerName FROM customers a
+JOIN payments b ON a.customerNumber = b.customerNumber
+WHERE a.country = "USA"
+GROUP BY a.customerNumber
+ORDER BY SUM(amount) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
-
+solution: Mini Gifts Distributors Ltd.
 
 ### 47) How much has our largest customer inside the USA ordered with us (total value)?
 ```
-<Your SQL query here>
+SELECT SUM(amount) AS total FROM payments a
+JOIN customers b ON a.customerNumber = b.customerNumber
+WHERE b.country = "USA"
+GROUP BY a.customerNumber
+ORDER BY total DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 584188.24
 
 ### 48) How many customers do we have that never ordered anything?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers 
+WHERE customerNumber NOT IN (SELECT customerNumber FROM orders)
 ```
 
-solution: `<your solution here>`
+solution: 24
 
 ### 49) What is the last name of our best employee in terms of revenue?
 ```
-<Your SQL query here>
+SELECT c.lastName FROM customers a
+JOIN (
+	SELECT customerNumber, SUM(amount) AS total FROM payments a
+	GROUP BY customerNumber
+) b ON a.customerNumber = b.customerNumber
+JOIN (
+	SELECT employeeNumber, lastName FROM employees
+) c ON c.employeeNumber = a.salesRepEmployeeNumber
+GROUP BY c.employeeNumber
+ORDER BY  SUM(total) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: Hernandez
 
 
 ### 50) What is the office name of the least profitable office in the year 2004?
 ```
-<Your SQL query here>
+SELECT d.city FROM customers a
+JOIN (
+	SELECT customerNumber, SUM(amount) AS total FROM payments
+	GROUP BY customerNumber
+) b ON a.customerNumber = b.customerNumber
+JOIN employees c ON c.employeeNumber = a.salesRepEmployeeNumber
+JOIN offices d ON d.officeCode = c.officeCode
+GROUP BY c.officeCode
+ORDER BY SUM(total)
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: Tokyo
 
 
 ## Are you done? Amazing!
