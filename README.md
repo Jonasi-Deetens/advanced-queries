@@ -238,25 +238,28 @@ solution: 38, Classic Cars
 
 ### 23) How many products are low in stock? (below 100 pieces)
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM products
+WHERE quantityInStock < 100
 ```
 
-solution: `<your solution here>`
+solution: 2
 
 ### 24) How many products have more the 100 pieces in stock, but are below 500 pieces.
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM products
+WHERE quantityInStock BETWEEN 100 AND 500;
 ```
 
-solution: `<your solution here>`
+solution: 3
 
 
 ### 25) How many orders did we ship between and including June 2004 & September 2004
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM orders
+WHERE shippedDate BETWEEN CAST('2004-06-00' AS DATE) AND CAST('2004-09-30' AS DATE);
 ```
 
-solution: `<your solution here>`
+solution: 43
 
 ### 26) How many customers share the same last name as an employee of ours?
 ```
