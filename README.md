@@ -228,13 +228,13 @@ WHERE country_name NOT IN (
 solution: See list ^
 
 
-### 19) How many orders where never shipped?
+### 19) How many orders were never shipped?
 ```
 SELECT COUNT(*) FROM orders
-WHERE shippedDate IS NULL;
+WHERE status <> "Shipped";
 ```
 
-solution: 14
+solution: 23
 
 ### 20) How many customers does Steve Patterson have with a credit limit above 100 000 EUR?
 ```
@@ -248,10 +248,10 @@ solution: 25
 ### 21) How many orders have been shipped to our customers?
 ```
 SELECT COUNT(*) FROM orders
-WHERE shippedDate IS NOT NULL;
+WHERE status="Shipped";
 ```
 
-solution: 312
+solution: 303
 
 
 ### 22) How much products does the biggest product line have? And which product line is that?
@@ -291,61 +291,78 @@ solution: 43
 
 ### 26) How many customers share the same last name as an employee of ours?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers
+JOIN employees
+WHERE customers.contactLastName = employees.lastName
 ```
 
-solution: `<your solution here>`
+solution: 9
 
 ### 27) Give the product code for the most expensive product for the consumer?
 ```
-<Your SQL query here>
+SELECT productCode FROM products
+ORDER by msrp DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: S10_1949
 
 
 ### 28) What product (product code) offers us the largest profit margin (difference between buyPrice & MSRP).
 ```
-<Your SQL query here>
+SELECT productCode FROM products
+ORDER BY (MSRP - buyPrice) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: S10_1949
 
 ### 29) How much profit (rounded) can the product with the largest profit margin (difference between buyPrice & MSRP) bring us.
 ```
-<Your SQL query here>
+SELECT (MSRP - buyPrice) AS profit FROM products
+ORDER BY profit DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 115.72
 
 ### 30) Given the product number of the products (separated with spaces) that have never been sold?
 ```
-<Your SQL query here>
+SELECT CONCAT(productCode, ' ') FROM products
+WHERE productCode NOT IN (SELECT DISTINCT productCode FROM orderdetails);
 ```
 
-solution: `<your solution here>`
+solution: S18_3233 
 
 
 ### 31) How many products give us a profit margin below 30 dollar?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM products
+WHERE (MSRP - buyPrice) < 30
 ```
 
-solution: `<your solution here>`
+solution: 23
 
 ### 32) What is the product code of our most popular product (in number purchased)?
 ```
-<Your SQL query here>
+SELECT productCode FROM orderdetails
+GROUP BY productCode
+ORDER BY SUM(quantityOrdered) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: S18_3232
 
 ### 33) How many of our popular product did we effectively ship?
 ```
-<Your SQL query here>
+SELECT SUM(quantityOrdered) AS quantity FROM orderdetails
+WHERE orderNumber in (SELECT orderNumber FROM orders WHERE shippedDate IS NOT NULL)
+GROUP BY productCode
+ORDER BY quantity DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 1760
 
 
 ### 34) Which check number paid for order 10210. Tip: Pay close attention to the date fields on both tables to solve this.  
@@ -364,41 +381,61 @@ solution: `<your solution here>`
 
 ### 36) How many payments do we have above 5000 EUR and with a check number with a 'D' somewhere in the check number, ending the check number with the digit 9?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM payments
+WHERE amount > 5000 AND checkNumber LIKE '%D%'
 ```
 
-solution: `<your solution here>`
+solution: 29
 
 
 ### 38) In which country do we have the most customers that we do not have an office in?
 ```
-<Your SQL query here>
+SELECT country FROM customers
+WHERE country NOT IN (SELECT country FROM offices)
+GROUP BY country
+ORDER BY COUNT(*) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: Germany
 
 ### 39) What city has our biggest office in terms of employees?
 ```
-<Your SQL query here>
+SELECT city FROM offices
+JOIN employees
+WHERE employees.officeCode = offices.officeCode
+GROUP BY city
+ORDER BY COUNT(*) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: San Francisco
 
 ### 40) How many employees does our largest office have, including leadership?
 
 ```
-<Your SQL query here>
+SELECT COUNT(*) AS employeeCount FROM offices
+JOIN employees
+WHERE employees.officeCode = offices.officeCode
+GROUP BY city
+ORDER BY employeeCount DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 6
 
 
 ### 41) How many employees do we have on average per country (rounded)?
 ```
-<Your SQL query here>
+SELECT ROUND(AVG(employeeCount)) AS employeeAverage FROM offices a
+JOIN (
+SELECT officeCode, COUNT(*) AS employeeCount FROM employees
+GROUP BY officeCode
+) b ON a.officeCode = b.officeCode
+GROUP BY country;
 ```
 
-solution: `<your solution here>`
+solution: Japan - 2 / UK - 2 / USA - 3 / Australia - 4 / France - 5
 
 ### 42) What is the total value of all shipped & resolved sales ever combined?
 ```
