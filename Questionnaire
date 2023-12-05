@@ -13,25 +13,27 @@ Find out the answer to each question using the dummy data in your database.
 
 ### 1) How many customers do we have?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers;
 ```
 
-solution: `<your solution here>`
+solution: 122
 
 
 ### 2) What is the customer number of Mary Young?
 ```
-<Your SQL query here>
+SELECT customerNumber FROM customers 
+WHERE customers.contactFirstName="Mary" && customers.contactLastName="Young";
 ```
 
-solution: `<your solution here>`
+solution: 219
 
 ### 3) What is the customer number of the person living at Magazinweg 7, Frankfurt 60528?
 ```
-<Your SQL query here>
+SELECT customerNumber FROM customers 
+WHERE CONCAT(customers.addressLine1, ", ", customers.city, " ", customers.postalCode)="Magazinweg 7, Frankfurt 60528"
 ```
 
-solution: `<your solution here>`
+solution: 247
 
 
 ### 4) If you sort the employees on their last name, what is the email of the first employee?
