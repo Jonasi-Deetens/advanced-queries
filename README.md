@@ -367,17 +367,24 @@ solution: 1760
 
 ### 34) Which check number paid for order 10210. Tip: Pay close attention to the date fields on both tables to solve this.  
 ```
-<Your SQL query here>
+SELECT checkNumber FROM payments a
+JOIN (
+	SELECT * FROM orders
+	WHERE orderNumber = "10210"
+) b ON b.customernumber = a.customerNumber
+WHERE a.paymentDate < b.requiredDate
 ```
 
-solution: `<your solution here>`
+solution: CI381435
 
 ### 35) Which order was paid by check CP804873?
 ```
-<Your SQL query here>
+SELECT b.orderNumber FROM payments a
+JOIN orders b ON b.customerNumber = a.customerNumber
+WHERE checkNumber = "CP804873" AND a.paymentDate < b.requiredDate;
 ```
 
-solution: `<your solution here>`
+solution: 10330
 
 ### 36) How many payments do we have above 5000 EUR and with a check number with a 'D' somewhere in the check number, ending the check number with the digit 9?
 ```
