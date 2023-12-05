@@ -102,7 +102,7 @@ solution: 93
 ### 11) How many customers do we have with the following conditions (only 1 query needed):  - Living in the state Nevada or New York OR - Living outside the USA or the customers and with a credit limit above 1000 dollar?
 ```
 SELECT COUNT(*) FROM customers 
-WHERE (state="NV" OR state="NY") OR (country <> "USA" AND creditLimit > 1000);
+WHERE state in ("NV", "NY") OR (country <> "USA" AND creditLimit > 1000);
 ```
 
 solution: 70
@@ -170,8 +170,7 @@ solution: Young
 - [X] Shipped
 
 ```
-SELECT status FROM orders
-GROUP BY status;
+SELECT DISTINCT status from orders;
 ```
 
 solution: See list ^
@@ -182,53 +181,60 @@ solution: See list ^
 
 - [ ] Canada
 
-- [ ] China
+- [X] China
 
 - [ ] Germany
 
-- [ ] Greece
+- [X] Greece
 
 - [ ] Japan
 
 - [ ] Philippines
 
-- [ ] South Korea
+- [X] South Korea
 
 ```
-<Your SQL query here>
+SELECT DISTINCT country FROM customers;
 ```
 
-solution: `<your solution here>`
+solution: See list ^
 
 
 ### 19) How many orders where never shipped?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM orders
+WHERE shippedDate IS NULL;
 ```
 
-solution: `<your solution here>`
+solution: 14
 
 ### 20) How many customers does Steve Patterson have with a credit limit above 100 000 EUR?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers
+JOIN employees
+WHERE concat(employees.firstName, " ", employees.lastName) = "Steve Patterson" AND customers.creditLimit > "100000";
 ```
 
-solution: `<your solution here>`
+solution: 25
 
 ### 21) How many orders have been shipped to our customers?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM orders
+WHERE shippedDate IS NOT NULL;
 ```
 
-solution: `<your solution here>`
+solution: 312
 
 
 ### 22) How much products does the biggest product line have? And which product line is that?
 ```
-<Your SQL query here>
+SELECT COUNT(*) AS products, productLine FROM products
+GROUP BY productLine
+ORDER BY products DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: 38, Classic Cars
 
 ### 23) How many products are low in stock? (below 100 pieces)
 ```
