@@ -101,71 +101,80 @@ solution: 93
 
 ### 11) How many customers do we have with the following conditions (only 1 query needed):  - Living in the state Nevada or New York OR - Living outside the USA or the customers and with a credit limit above 1000 dollar?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers 
+WHERE (state="NV" OR state="NY") OR (country <> "USA" AND creditLimit > 1000);
 ```
 
-solution: `<your solution here>`
+solution: 70
 
 
 ### 12) How many customers don't have an assigned sales representative?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM customers 
+WHERE salesRepEmployeeNumber IS NULL;
 ```
 
-solution: `<your solution here>`
+solution: 22
 
 ### 13) How many orders have a comment?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM orders 
+WHERE comments IS NOT NULL;
 ```
 
-solution: `<your solution here>`
+solution: 80
 
 
 ### 14) How many orders do we have where the comment mentions the word "caution"?
 ```
-<Your SQL query here>
+SELECT COUNT(*) FROM orders 
+WHERE comments LIKE '%caution%'
 ```
 
-solution: `<your solution here>`
+solution: 4
 
 ### 15) What is the average credit limit of our customers from the USA? (rounded)
 ```
-<Your SQL query here>
+SELECT ROUND(AVG(creditLimit)) FROM customers
+WHERE country = "USA";
 ```
 
-solution: `<your solution here>`
+solution: 78103
 
 
 ### 16) What is the most common last name from our customers?
 ```
-<Your SQL query here>
+SELECT contactLastName FROM customers
+GROUP BY contactLastName
+ORDER BY COUNT(*) DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: Young
 
 ### 17) What are valid statuses of the orders?
-- [ ] Resolved
+- [X] Resolved
 
-- [ ] Cancelled
+- [X] Cancelled
 
 - [ ] Broken
 
-- [ ] On Hold
+- [X] On Hold
 
-- [ ] Disputed
+- [X] Disputed
 
-- [ ] In Process
+- [X] In Process
 
 - [ ] Processing
 
-- [ ] Shipped
+- [X] Shipped
 
 ```
-<Your SQL query here>
+SELECT status FROM orders
+GROUP BY status;
 ```
 
-solution: `<your solution here>`
+solution: See list ^
 
 
 ### 18) In which countries don't we have any customers?
