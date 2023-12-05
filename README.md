@@ -30,7 +30,7 @@ solution: 219
 ### 3) What is the customer number of the person living at Magazinweg 7, Frankfurt 60528?
 ```
 SELECT customerNumber FROM customers 
-WHERE CONCAT(customers.addressLine1, ", ", customers.city, " ", customers.postalCode)="Magazinweg 7, Frankfurt 60528"
+WHERE CONCAT(customers.addressLine1, ", ", customers.city, " ", customers.postalCode)="Magazinweg 7, Frankfurt 60528";
 ```
 
 solution: 247
@@ -38,32 +38,40 @@ solution: 247
 
 ### 4) If you sort the employees on their last name, what is the email of the first employee?
 ```
-<Your SQL query here>
+SELECT email FROM employees ORDER BY lastName
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: gbondur@classicmodelcars.com
 
 ### 5) If you sort the employees on their last name, what is the email of the last employee?
 ```
-<Your SQL query here>
+SELECT email FROM employees ORDER BY lastName DESC
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: gvanauf@classicmodelcars.com
 
 
 ### 6) What is first the product code of all the products from the line 'Trucks and Buses', sorted first by productscale, then by productname.
 ```
-<Your SQL query here>
+SELECT productCode FROM products 
+WHERE productLine="Trucks and Buses"
+ORDER BY productScale, productName
+LIMIT 1
 ```
 
-solution: `<your solution here>`
+solution: S12_4473
 
 ### 7) What is the email of the first employee, sorted on their last name that starts with a 't'?
 ```
-<Your SQL query here>
+SELECT email FROM employees 
+WHERE LEFT(lastName, 1) = "t" 
+ORDER BY lastName
+LIMIT 1;
 ```
 
-solution: `<your solution here>`
+solution: lthompson@classicmodelcars.com
 
 
 ### 8) Which customer (give customer number) payed by check on 2004-01-19?
