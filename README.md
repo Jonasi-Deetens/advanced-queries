@@ -439,10 +439,15 @@ solution: Japan - 2 / UK - 2 / USA - 3 / Australia - 4 / France - 5
 
 ### 42) What is the total value of all shipped & resolved sales ever combined?
 ```
-<Your SQL query here>
+SELECT SUM(totalPrice) FROM orders a
+join (
+SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
+GROUP BY orderNumber
+) b ON a.orderNumber = b.orderNumber
+WHERE a.status IN ("Shipped", "Resolved");
 ```
 
-solution: `<your solution here>`
+solution: 8999330.52
 
 ### 43) What is the total value of all shipped & resolved sales in the year 2005 combined? (based on shipping date)
 ```
