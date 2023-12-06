@@ -553,11 +553,12 @@ solution: Hernandez
 ```
 SELECT d.officeCode FROM customers a
 JOIN (
-	SELECT customerNumber, SUM(amount) AS total FROM payments
+	SELECT customerNumber,  paymentDate, SUM(amount) AS total FROM payments
 	GROUP BY customerNumber
 ) b ON a.customerNumber = b.customerNumber
 JOIN employees c ON c.employeeNumber = a.salesRepEmployeeNumber
 JOIN offices d ON d.officeCode = c.officeCode
+WHERE YEAR(paymentDate) = "2004"
 GROUP BY c.officeCode
 ORDER BY SUM(total)
 LIMIT 1;
