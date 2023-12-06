@@ -512,11 +512,8 @@ solution: Mini Gifts Distributors Ltd.
 
 ### 47) How much has our largest customer inside the USA ordered with us (total value)?
 ```
-SELECT round(SUM(totalPrice)) AS totalRev FROM orders a
-join (
-    SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
-    GROUP BY orderNumber
-) b ON a.orderNumber = b.orderNumber
+SELECT round(SUM(quantityOrdered * priceEach)) AS totalRev FROM orders a
+join orderdetails b ON a.orderNumber = b.orderNumber
 JOIN customers c ON c.customerNumber = a.customerNumber
 WHERE c.country = "USA"
 GROUP BY a.customerNumber
