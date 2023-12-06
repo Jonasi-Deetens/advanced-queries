@@ -512,15 +512,19 @@ solution: Mini Gifts Distributors Ltd.
 
 ### 47) How much has our largest customer inside the USA ordered with us (total value)?
 ```
-SELECT SUM(amount) AS total FROM payments a
-JOIN customers b ON a.customerNumber = b.customerNumber
-WHERE b.country = "USA"
+SELECT round(SUM(totalPrice)) AS totalRev FROM orders a
+join (
+    SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
+    GROUP BY orderNumber
+) b ON a.orderNumber = b.orderNumber
+JOIN customers c ON c.customerNumber = a.customerNumber
+WHERE c.country = "USA"
 GROUP BY a.customerNumber
-ORDER BY total DESC
+ORDER BY totalRev DESC
 LIMIT 1;
 ```
 
-solution: 584188.24
+solution: 591827
 
 ### 48) How many customers do we have that never ordered anything?
 ```
