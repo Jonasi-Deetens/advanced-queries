@@ -239,11 +239,11 @@ solution: 23
 ### 20) How many customers does Steve Patterson have with a credit limit above 100 000 EUR?
 ```
 SELECT COUNT(*) FROM customers
-JOIN employees
+JOIN employees ON customers.salesRepEmployeeNumber = employees.employeeNumber
 WHERE concat(employees.firstName, " ", employees.lastName) = "Steve Patterson" AND customers.creditLimit > "100000";
 ```
 
-solution: 25
+solution: 3
 
 ### 21) How many orders have been shipped to our customers?
 ```
@@ -284,10 +284,10 @@ solution: 3
 ### 25) How many orders did we ship between and including June 2004 & September 2004
 ```
 SELECT COUNT(*) FROM orders
-WHERE shippedDate BETWEEN CAST('2004-06-00' AS DATE) AND CAST('2004-09-30' AS DATE);
+WHERE shippedDate BETWEEN CAST('2004-06-01' AS DATE) AND CAST('2004-09-30' AS DATE) AND STATUS="shipped";
 ```
 
-solution: 43
+solution: 42
 
 ### 26) How many customers share the same last name as an employee of ours?
 ```
@@ -319,12 +319,12 @@ solution: S10_1949
 
 ### 29) How much profit (rounded) can the product with the largest profit margin (difference between buyPrice & MSRP) bring us.
 ```
-SELECT (MSRP - buyPrice) AS profit FROM products
+SELECT ROUND(MSRP - buyPrice) AS profit FROM products
 ORDER BY profit DESC
 LIMIT 1;
 ```
 
-solution: 115.72
+solution: 116
 
 ### 30) Given the product number of the products (separated with spaces) that have never been sold?
 ```
@@ -356,13 +356,13 @@ solution: S18_3232
 ### 33) How many of our popular product did we effectively ship?
 ```
 SELECT SUM(quantityOrdered) AS quantity FROM orderdetails
-WHERE orderNumber in (SELECT orderNumber FROM orders WHERE shippedDate IS NOT NULL)
+WHERE orderNumber in (SELECT orderNumber FROM orders WHERE STATUS="shipped")
 GROUP BY productCode
 ORDER BY quantity DESC
 LIMIT 1;
 ```
 
-solution: 1760
+solution: 1720
 
 
 ### 34) Which check number paid for order 10210. Tip: Pay close attention to the date fields on both tables to solve this.  
@@ -388,11 +388,11 @@ solution: 10330
 
 ### 36) How many payments do we have above 5000 EUR and with a check number with a 'D' somewhere in the check number, ending the check number with the digit 9?
 ```
-SELECT COUNT(*) FROM payments
-WHERE amount > 5000 AND checkNumber LIKE '%D%'
+SELECT * FROM payments
+WHERE amount > 5000 AND checkNumber LIKE '%D%9'
 ```
 
-solution: 29
+solution: 3
 
 
 ### 38) In which country do we have the most customers that we do not have an office in?
@@ -434,22 +434,21 @@ solution: 6
 
 ### 41) How many employees do we have on average per country (rounded)?
 ```
-SELECT ROUND(AVG(employeeCount)) AS employeeAverage FROM offices a
+SELECT ROUND(COUNT(*) / b.numberOfOffices) FROM employees
 JOIN (
-SELECT officeCode, COUNT(*) AS employeeCount FROM employees
-GROUP BY officeCode
-) b ON a.officeCode = b.officeCode
-GROUP BY country;
+	SELECT COUNT(DISTINCT country) AS numberOfOffices FROM offices
+) b
+
 ```
 
-solution: Japan - 2 / UK - 2 / USA - 3 / Australia - 4 / France - 5
+solution: 5
 
 ### 42) What is the total value of all shipped & resolved sales ever combined?
 ```
 SELECT SUM(totalPrice) FROM orders a
 join (
-SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
-GROUP BY orderNumber
+	SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalPrice FROM orderdetails
+	GROUP BY orderNumber
 ) b ON a.orderNumber = b.orderNumber
 WHERE a.status IN ("Shipped", "Resolved");
 ```
@@ -551,7 +550,7 @@ solution: Hernandez
 
 ### 50) What is the office name of the least profitable office in the year 2004?
 ```
-SELECT d.city FROM customers a
+SELECT d.officeCode FROM customers a
 JOIN (
 	SELECT customerNumber, SUM(amount) AS total FROM payments
 	GROUP BY customerNumber
@@ -563,7 +562,7 @@ ORDER BY SUM(total)
 LIMIT 1;
 ```
 
-solution: Tokyo
+solution: 5
 
 
 ## Are you done? Amazing!
